@@ -6,6 +6,8 @@ using namespace std;
 vector<vector<int>> dp;
 string s, t;
 
+//dp[i][j] represents the length of LCS of string x[i->n-1] and y[j->m-1]
+
 string getLCS(int i, int j, int LCS) {
 	string ans = "";
 
@@ -16,7 +18,7 @@ string getLCS(int i, int j, int LCS) {
 			j++;
 			LCS--;
 		} else {
-			if (dp[i + 1][j] > dp[i][j + 1]) {
+			if (dp[i + 1][j] > dp[i][j + 1]) {//Skip character from string x because LCS is larger
 				i++;
 			} else {
 				j++;
@@ -59,3 +61,4 @@ int main() {
 
 	return 0;
 }
+
