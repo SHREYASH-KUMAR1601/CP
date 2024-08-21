@@ -1,64 +1,78 @@
-// #include <bits/stdc++.h>
-// using namespace std;
+/*
+*    Author: ShreyashxDON
+*    Created: Monday, 19.08.2024 09:13 AM (GMT+5:30)
 
-// const int N = 0;
+    ॐ त्र्यम्बकं यजामहे , सुगन्धिं पुष्टिवर्धनम् ।
+    उर्वारुकमिव बन्धनान् ,मृत्योर्मुक्षीय मामृतात् ॥
 
-// #define IOS ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-// int n, m, k;
-// string a;
+*/
+#include <bits/stdc++.h>
+using namespace std;
 
-// bool solve(int i, int swam) {
-// 	if (i == n) {
-// 		return true;
-// 	}
-// 	if (i > n) {
-// 		return false;
-// 	}
+#define int long long int
+#define double long double
+#define endl '\n'
 
-// 	bool op1 = false, op2 = false;
+const int MOD = 1000000007;
 
-// 	if (i < n && a[i] == 'L') {
-// 		if (i + m <= n) {
-// 			op1 = solve(i + m, swam);
-// 		}
-// 	}
+void solve() {
+	int n, m, k;
+	cin >> n >> m >> k;
 
-// 	if (i < n && a[i] == 'W') {
-// 		if (swam + 1 <= k) {
-// 			op2 = solve(i + 1, swam + 1);
-// 		}
-// 	}
+	string s;
+	cin >> s;
 
-// 	// Check the current position
-// 	if (i < n && a[i] == 'C') {
-// 		return false;
-// 	}
+	vector<int> logs;
 
-// 	return op1 || op2;
-// }
+	// Collect positions of all logs
+	for (int i = 0; i < n; ++i) {
+		if (s[i] == 'L') {
+			logs.push_back(i);
+		}
+	}
+	logs.push_back(n); // Add the position of the right bank
 
-// int main() {
-// 	IOS;
+	int i = -1;       // Starting position (before the first segment)
+	int next_log = 0; // Index for logs in the logs vector
 
-// 	int t;
-// 	cin >> t;
-// 	while (t--) {
-// 		cin >> n >> m >> k;
-// 		cin >> a;
+	while (i < n - 1) {
+		// Check if we can jump directly to the next log or to the bank
+		if (m >= logs[next_log] - i) {
+			i = logs[next_log];
+		} else {
+			// Move forward by jumping up to `m` meters
+			i += m;
+			if (i > n - 1) { // If we can reach the bank
+				cout << "YES" << endl;
+				return;
+			}
+			// Swim or encounter crocodile
+			while (i < n && i < logs[next_log]) {
+				if (s[i] != 'C' && k > 0) {
+					++i;
+					--k;
+				} else {
+					cout << "NO" << endl;
+					return;
+				}
+			}
+		}
+		next_log++;
+	}
 
-// 		if (n < m) {
-// 			cout << "YES" << endl;
-// 			continue;
-// 		}
+	cout << "YES" << endl;
+}
 
-// 		a += 'L';
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
 
-// 		if (solve(0, 0)) {
-// 			cout << "YES" << endl;
-// 		} else {
-// 			cout << "NO" << endl;
-// 		}
-// 	}
+	int t = 1;
+	cin >> t;
+	while (t--) {
+		solve();
+	}
 
-// 	return 0;
-// }
+	return 0;
+}

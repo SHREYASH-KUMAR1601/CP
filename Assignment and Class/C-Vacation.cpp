@@ -20,9 +20,7 @@ int a[N], b[N], c[N];
 int n;
 
 /*
-
 	dp[i][ch] : Maximum happiness till ith day by performing ch activity on ith day
-
 */
 
 int Max_Happiness() {
