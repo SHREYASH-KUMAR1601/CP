@@ -1,60 +1,66 @@
-#include <iostream>
-#include <vector>
-#include <set>
+/*
+*    Author: ShreyashxDON
+*    Created: Sunday, 08.09.2024 10:45 AM (GMT+5:30)
+
+    ॐ त्र्यम्बकं यजामहे , सुगन्धिं पुष्टिवर्धनम् ।
+    उर्वारुकमिव बन्धनान् ,मृत्योर्मुक्षीय मामृतात् ॥
+*/
+
+#include <bits/stdc++.h>
 using namespace std;
 
-int countValidSubsegments(int n, int x, const vector<int>& a) {
-    // Prefix sum array
-    vector<long long> prefix(n + 1, 0);
-    for (int i = 1; i <= n; ++i) {
-        prefix[i] = prefix[i - 1] + a[i - 1];
+#define int long long int
+#define double long double
+#define endl '\n'
+
+const int MOD = 1000000007;
+
+// Use sqrtl() instead of sqrt() for long long
+
+void solve() {
+    int n, x;
+    cin >> n >> x;
+
+    vector<int> a(n, 0);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
     }
 
-    // Multisets to track minimum and maximum prefix sums
-    multiset<long long> suff_min, suff_max;
-    suff_min.insert(0);
-    suff_max.insert(0);
+    vector<int> pre(n, 0);
+    pre[0] = a[0];
 
-    long long count = 0;
-    int j = n;
+    for (int i = 1; i < n; i++) {
+        pre[i] = pre[i - 1] + a[i];
+    }
 
-    for (int i = n; i >= 1; --i) {
-        // Update suffix multisets
-        suff_min.insert(prefix[i]);
-        suff_max.insert(prefix[i]);
+    vector<int> dp(n, 0);
+    for (int i = n - 1; i >= 0; i--) {
+        int offset = i ? pre[i - 1] : 0;
+        int r = upper_bound(pre.begin() + i, pre.end(), offset + x) - pre.begin();
 
-        // Adjust j to find the maximum valid r for current l = i
-        while (j >= i && *suff_max.rbegin() - *suff_min.begin() > x) {
-            suff_min.erase(suff_min.find(prefix[j]));
-            suff_max.erase(suff_max.find(prefix[j]));
-            --j;
+        if (r < n) {
+            dp[i] = 1 + ((r + 1 < n) ? dp[r + 1] : 0); // Ensure to correctly reference dp[r + 1]
         }
-
-        // Count valid subsegments ending at i
-        count += (j - i + 1);
     }
 
-    return count;
+    int ans = 0;
+
+    for (int i = 0; i < n; i++) {
+        ans += (n - i) - dp[i];
+    }
+
+    cout << ans << endl;
 }
 
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
+signed main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
 
-    int t;
+    int t = 1;
     cin >> t;
-
     while (t--) {
-        int n, x;
-        cin >> n >> x;
-
-        vector<int> a(n);
-        for (int i = 0; i < n; ++i) {
-            cin >> a[i];
-        }
-
-        long long result = countValidSubsegments(n, x, a);
-        cout << result << "\n";
+        solve();
     }
 
     return 0;
